@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, ipcRenderer, shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -42,10 +42,25 @@ function F1UpdData(data) {
     });
 }
 
+function UpdSetts(prefs) {
+    const settsFilePath = path.join(app.getPath('userData'), 'conf.json')
+
+    fs.access(settsFilePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error("ERR with writing data SETTS/CONF/PREFS (however you call it, lol) in main.js")
+        }
+        fs.writeFileSync(settsFilePath, prefs)
+    });
+}
+
 function handleF1UpdData (event, data) {
     const webContents = event.sender
-    const wind = BrowserWindow.fromWebContents(webContents)
     F1UpdData(data)
+}
+
+function handleSetts (event, data) {
+    const webContents = event.sender
+    UpdSetts(data)
 }
 
 app.whenReady().then(() => {
@@ -70,13 +85,19 @@ app.whenReady().then(() => {
 
     fs.access(prefFilePath, fs.constants.F_OK, (err) => {
         if (err) {
-            fs.writeFileSync(prefFilePath, '{"theme": "dark","lang": "en-US","appname": "OVS 2.0"}');
+            fs.writeFileSync(prefFilePath, '{"theme": "dark","lang": "english","appname": "OVS 2.0"}');
         }
         const prefData = fs.readFileSync(prefFilePath, 'utf8');
-        win.webContents.send('config-json', prefData);
+        const jsonData = JSON.parse(prefData);
+        ipcMain.on("setappname", (event, appname) => {
+            global.appname = appname
+        })
+
+        win.webContents.send('config-json', jsonData);
     });
 
-    ipcMain.on('pushF1UpdData', handleF1UpdData)
+    ipcMain.on('pushF1UpdData', handleF1UpdData);
+    ipcMain.on('pushSetts', handleSetts)
 });
 
 app.on('window-all-closed', () => {

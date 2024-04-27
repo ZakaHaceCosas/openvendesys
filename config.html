@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'">-->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVS 2.0</title>
+    <link rel="icon" href="favovs.png" type="image/png">
+    <link href="modules/bootstrap.min.css" rel="stylesheet">
+    <script src="js/prefs.js"></script>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const jsonData = JSON.parse(window.electron.requestConfigJson());
+            console.log(jsonData);
+            document.getElementById('appNameInp').value = jsonData['appname'];
+            var themeValue = jsonData['theme'];
+            var themeSelect = document.getElementById('theme');
+
+            for (var i = 0; i < themeSelect.options.length; i++) {
+                if (themeSelect.options[i].value === themeValue) {
+                    themeSelect.options[i].selected = true;
+                    break;
+                }}
+            });
+    </script>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand mb-0 h1" href="index.html" id="showappnameherebruh">OVS 2.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <form class="d-flex" role="search" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Settings</h1>
+        <hr>
+        <form id="prefsform">
+            <div class="mb-3">
+                <label for="theme" class="form-label">Theme</label>
+                <select class="form-select" id="theme" required>
+                    <option value="light">Light</option>
+                    <option selected value="dark">Dark</option>
+                    <option value="darker">Darker</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="language" class="form-label">Language</label>
+                <select class="form-select" id="language" required>
+                    <option value="english">English</option>
+                    <option value="spanish">Spanish</option>
+                    <option value="french">French</option>
+                </select>
+                <div class="form-text">Except for English and Spanish, translations are made using Google, and may not be 100% correct.</div>
+            </div>
+            <div class="mb-3">
+              <label for="appName" class="form-label">App Name</label>
+              <input type="text" class="form-control" id="appNameInp" placeholder="Enter app name" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="saveSetts">Save</button>
+        </form>
+    </div>
+    <script src="js/prefsrenderer.js"></script>
+    <script src="modules/popper.min.js"></script>
+    <script src="modules/bootstrap.min.js"></script>
+</body>
+</html>
