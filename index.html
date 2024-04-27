@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'">-->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVS 2.0</title>
+    <link rel="icon" href="favovs.png" type="image/png">
+    <link href="modules/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand mb-0 h1" href="index.html">OVS 2.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="config.html">Settings</a>
+                    </li>
+                    <form class="d-flex" role="search" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="btn-group dropend">
+                    <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Update data
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updItStkMdl">Update item stock</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="#">Create set</a></li>
+                        <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="#">Delete set</a></li>
+                        <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
+                    </ul>
+                </div>
+                <hr>
+                <!--
+                <div class="card">
+                    <div class="card-header">
+                        Navigation
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column mb-3">
+                            <button class="btn btn-primary">
+                                See all
+                            </button>
+                            <hr>
+                            <button class="btn btn-outline-primary">
+                                SET 1
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="col-md-9">
+                <div id="bodo"></div>
+                <div class="card">
+                    <div class="card-header">
+                        All your data
+                    </div>
+                    <div class="card-body">
+                        <ul id="displayTotal" class="list-group">
+                        </ul>
+                        <script>
+                            function alertEndUser(level, set, whatfor) {
+                                let levelclass;
+                                let alertInnerHtml;
+                                const generatedAlert = document.createElement("div");
+                                const bodo = document.getElementById("bodo");
+
+                                bodo.appendChild(generatedAlert);
+
+                                if (level === "med") {
+                                    levelclass = "warning";
+                                } else if (level === "high") {
+                                    levelclass = "danger";
+                                } else if (level === "good") {
+                                    levelclass = "success";
+                                } else {
+                                    levelclass = "info";
+                                }
+
+                                if (whatfor === "low") {
+                                    alertInnerHtml = `Running low on ${set}'s stock.`;
+                                } else if (whatfor === "broke") {
+                                    alertInnerHtml = `You ran out of ${set}'s stock!`;
+                                }
+
+                                generatedAlert.className = `alert alert-${levelclass}`;
+                                generatedAlert.innerHTML = alertInnerHtml;
+                            }
+
+                            function buildF1I1HTMLfromJSON(data) {
+                                const select = document.getElementById('inputWhatSetForUpdateEntryData');
+
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        const sel = document.getElementById('inputWhatSetForUpdateEntryData');
+                                        const opt = document.createElement('option');
+                                        opt.innerHTML = setName;
+                                        opt.value = setName;
+                                        sel.appendChild(opt)
+                                    }
+                                }
+                            }
+
+                            function buildF1I2HTMLfromJSON(data) {
+                                const select = document.getElementById('inputWhatEntryForSetForUpdateEntryData');
+                                const othersel = document.getElementById('inputWhatSetForUpdateEntryData');
+
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        if (othersel.value == setName) {
+                                            select.innerHTML = '<option selected disabled value="">Choose an ITEM</option>';
+                                            for (const itemName in data[setName]) {
+                                                if (data[setName].hasOwnProperty(itemName)) {
+                                                    const sel = document.getElementById('inputWhatEntryForSetForUpdateEntryData');
+                                                    const opt = document.createElement('option');
+                                                    opt.innerHTML = itemName;
+                                                    opt.value = itemName;
+                                                    sel.appendChild(opt)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            function buildHTMLFromJSON(data) {
+                                const ul = document.createElement('ul');
+                                ul.id = 'mainStuffOl';
+                                ul.className = 'list-group';
+
+                                let totalGlobal = 0;
+
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        const setLi = document.createElement('li');
+                                        setLi.className = 'list-group-item d-flex justify-content-between align-items-start';
+                                        const div = document.createElement('div');
+                                        div.className = 'ms-2 me-auto';
+                                        const h4 = document.createElement('h4');
+                                        h4.textContent = setName;
+                                        const itemUl = document.createElement('ul');
+                                        itemUl.className = 'list-group list-group-flush';
+
+                                        let totalSet = 0;
+
+                                        for (const itemName in data[setName]) {
+                                            if (data[setName].hasOwnProperty(itemName)) {
+                                                const itemLi = document.createElement('li');
+                                                itemLi.className = 'list-group-item';
+                                                itemLi.textContent = `${data[setName][itemName].name} - STOCK: ${data[setName][itemName].stock}`;
+                                                totalSet += data[setName][itemName].stock;
+                                                itemUl.appendChild(itemLi);
+                                            }
+                                        }
+
+                                        div.appendChild(h4);
+                                        div.appendChild(itemUl);
+                                        setLi.appendChild(div);
+
+                                        const p = document.createElement('p');
+                                        p.textContent = `TOTAL: ${totalSet}`;
+                                        if (totalSet < 20 && totalSet > 1) {
+                                            p.className = 'badge text-bg-warning';
+                                            alertEndUser("med", setName, "low")
+                                        }
+                                        else if (totalSet < 1) {
+                                            p.className = 'badge text-bg-danger';
+                                            alertEndUser("high", setName, "broke")
+                                        }
+                                        else {
+                                            p.className = 'badge text-bg-success';
+                                        };
+                                        setLi.appendChild(p);
+
+                                        totalGlobal += totalSet;
+
+                                        ul.appendChild(setLi);
+                                    }
+                                }
+
+                                const totalGlobalLbl = document.createElement('li');
+                                totalGlobalLbl.className = 'list-group-item h6';
+                                let totalGlobalSpanClassname;
+                                if (totalGlobal < 20 && totalGlobal > 1) {
+                                    totalGlobalSpanClassname = '--bs-warning-text-emphasis';
+                                }
+                                else if (totalGlobal < 1) {
+                                    totalGlobalSpanClassname = '--bs-danger-text-emphasis';
+                                }
+                                else {
+                                    totalGlobalSpanClassname = '--bs-success-text-emphasis';
+                                };
+                                totalGlobalLbl.innerHTML = `TOTAL GLOBAL: <span style="color: var(${totalGlobalSpanClassname})">${totalGlobal}</span>`;
+                                document.getElementById('displayTotal').appendChild(totalGlobalLbl);
+
+                                return ul;
+                            }
+
+                            window.addEventListener('DOMContentLoaded', () => {
+                                const jsonData = window.electron.requestDataJson();
+                                const data = JSON.parse(jsonData);
+                                const jsonContainer = document.getElementById('json-container');
+                                const sel2 = document.getElementById('inputWhatSetForUpdateEntryData');
+
+                                jsonContainer.appendChild(buildHTMLFromJSON(data));
+                                buildF1I1HTMLfromJSON(data);
+                                sel2.addEventListener('change', () => {
+                                    buildF1I2HTMLfromJSON(data);
+                                });
+                            });
+
+                            function updateJson() {
+                                const key = document.getElementById('key-input').value;
+                                const value = document.getElementById('value-input').value;
+
+                                window.electron.updateJson(key, value);
+                            }
+                        </script>
+                        <div id="json-container"></div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                Detalles del archivo
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Nombre del archivo</h5>
+                <p class="card-text">Tamaño: 1.5 MB</p>
+                <p class="card-text">Última modificación: 22 de abril de 2024</p>
+                <a href="#" class="btn btn-primary">Descargar</a>
+            </div>
+        </div>
+    </div>
+    -->
+    <div class="modal fade" id="updItStkMdl" tabindex="-1" aria-labelledby="updItStkMdlLbl" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updItStkMdlLbl">Update data</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="updDataF1" action="upd-data-confirm.html" method="get" novalidate>
+                        <div class="mb-3">
+                            <label for="inputWhatSetForUpdateEntryData" class="form-label">SET</label>
+                            <select name="inputWhatSetForUpdateEntryData" id="inputWhatSetForUpdateEntryData" class="form-select" required>
+                                <option selected disabled value="">Choose a SET</option>
+                            </select>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Choose a valid SET
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputWhatEntryForSetForUpdateEntryData" class="form-label">ITEM</label>
+                            <select name="inputWhatEntryForSetForUpdateEntryData" id="inputWhatEntryForSetForUpdateEntryData" class="form-select" required>
+                                <option selected disabled value="">Choose an ITEM</option>
+                            </select>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Choose a valid ITEM from your SET
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="btn-group w-100">
+                                <input type="radio" class="btn-check" name="whatToDoF1" id="whatToDoF1-Add" value="add" autocomplete="off" checked required>
+                                <label class="btn btn-outline-success w-100" for="whatToDoF1-Add">ADDED</label>
+                                <input type="radio" class="btn-check" name="whatToDoF1" id="whatToDoF1-Rem" value="remove" autocomplete="off" required>
+                                <label class="btn btn-outline-danger w-100" for="whatToDoF1-Rem">REMOVED</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputAmount" class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="inputAmount" name="amount" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please provide a valid amount.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary">Update</button>
+                        <script>
+                            (() => {
+                                'use strict';
+
+                                const forms = document.querySelectorAll('.needs-validation');
+
+                                Array.from(forms).forEach(form => {
+                                    form.addEventListener('submit', event => {
+                                        let isValid = true;
+
+                                        form.querySelectorAll('select').forEach(select => {
+                                            if (select.value === '') {
+                                                isValid = false;
+                                                select.classList.add('is-invalid');
+                                            } else {
+                                                select.classList.remove('is-invalid');
+                                            }
+                                        });
+
+                                        form.querySelectorAll('input[type="number"]').forEach(input => {
+                                            if (input.value === '') {
+                                                isValid = false;
+                                                input.classList.add('is-invalid');
+                                            } else {
+                                                input.classList.remove('is-invalid');
+                                            }
+                                        });
+
+                                        if (!isValid) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                        }
+
+                                        form.classList.add('was-validated');
+                                    }, false);
+                                });
+                            })();
+                        </script>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&COPY; 2024 OVS 2.0</p>
+            <!--
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+            -->
+        </footer>
+    </div>
+    <script src="modules/popper.min.js"></script>
+    <script src="modules/bootstrap.min.js"></script>
+</body>
+</html>
