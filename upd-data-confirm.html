@@ -24,7 +24,7 @@
                     </li>
                     <form class="d-flex" role="search" method="GET">
                         <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
-                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                        <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </ul>
             </div>
@@ -40,21 +40,16 @@
             <hr>
             <p class="mb-0">CONFIRM WILL UPDATE THE VALUE OF THE SPECIFIED ITEM TO <b><u><span id="result">undefined</span></u></b>.</p>
             <p class="mb-0">CANCEL WILL MAKE THE VALUE OF THE SPECIFIED ITEM REMAIN UNCHANGED, AS <b><u><span id="prev">undefined</span></u></b>.</p>
-            <input type="hidden" name="stfu" id="stfu" value="0">
         </div>
 
         <div class="d-grid gap-2 d-md-block">
-            <button type="button" class="btn btn-success" onclick="confirmChanges()" id="updDataF1FinalConfirmBtn">CONFIRM</button>
-            <button type="button" class="btn btn-dark">
-                <a href="index.html">
-                    CANCEL
-                </a>
+            <button type="button" class="btn btn-success" id="updDataF1FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
+            <button type="button" class="btn btn-dark" id="nevermindbruh">
+                CANCEL
             </button>
         </div>
 
         <script>
-            const ipcRenderer = require('ipcRenderer');
-
             const urlParams = new URLSearchParams(window.location.search);
 
             const inputWhatSetForUpdateEntryData = urlParams.get('inputWhatSetForUpdateEntryData');
@@ -94,13 +89,8 @@
                     }
                 }
             }
-            document.getElementById('stfu').value = endval;
             document.getElementById('result').innerHTML = endval;
             document.getElementById('prev').innerHTML = startval;
-
-            function push(a) {
-                ipcRenderer.send('upd-json-data-f1', a);
-            }
 
             function confirmChanges() {
                 var json = data;
@@ -113,10 +103,22 @@
 
                 var njson = JSON.stringify(data, null, 2);
                 console.log(njson);
+                window.electronAPI.pushF1UpdData(njson);
 
-                push(njson);
+                var a = document.createElement('a');
+                a.href = "index.html";
+                a.click();
             }
+
+            document.getElementById('nevermindbruh').addEventListener('click', function() {
+                var a = document.createElement('a');
+                a.href = "index.html";
+                a.click();
+            });
         </script>
     </div>
+    <script src="modules/popper.min.js"></script>
+    <script src="modules/bootstrap.min.js"></script>
+    <script src="js/renderer.js"></script>
 </body>
 </html>

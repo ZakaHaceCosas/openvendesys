@@ -31,6 +31,23 @@ const createWindow = () => {
 
 app.setUserTasks([])
 
+function F1UpdData(data) {
+    const dbFilePath = path.join(app.getPath('userData'), 'data.json');
+
+    fs.access(dbFilePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error("ERR with writing data F1 in main.js")
+        }
+        fs.writeFileSync(dbFilePath, data)
+    });
+}
+
+function handleF1UpdData (event, data) {
+    const webContents = event.sender
+    const wind = BrowserWindow.fromWebContents(webContents)
+    F1UpdData(data)
+}
+
 app.whenReady().then(() => {
     createWindow();
 
@@ -45,7 +62,7 @@ app.whenReady().then(() => {
 
     fs.access(dbFilePath, fs.constants.F_OK, (err) => {
         if (err) {
-            fs.writeFileSync(dbFilePath, '{"SAMPLE_SET_1":{"SAMPLE_I_1":{"name":"SAMPLE ITEM 1","stock":25},"SAMPLE_I_2":{"name":"SAMPLE ITEM 2","stock":153}},"LOW_SAMPLE_SET":{"LOW_STOCK_S":{"name":"LOW STOCK SAMPLE ITEM","stock":6},"NO_STOCK_S":{"name":"NO STOCK SAMPLE ITEM","stock":25}},"SAMPLE_SET_3":{"YET_ANOTHER_S_1":{"name":"YET ANOTHER SAMPLE ITEM 1","stock":25},"YET_ANOTHER_S_2":{"name":"YET ANOTHER SAMPLE ITEM 2","stock":25}}}');
+            fs.writeFileSync(dbFilePath, '{"SAMPLE_SET_1":{"SAMPLE_I_1":{"name":"SAMPLE ITEM 1","stock":25},"SAMPLE_I_2":{"name":"SAMPLE ITEM 2","stock":153}},"LOW_SAMPLE_SET":{"LOW_STOCK_S":{"name":"LOW STOCK SAMPLE ITEM","stock":4},"NO_STOCK_S":{"name":"NO STOCK SAMPLE ITEM","stock":0}},"SAMPLE_SET_3":{"YET_ANOTHER_S_1":{"name":"YET ANOTHER SAMPLE ITEM 1","stock":25},"YET_ANOTHER_S_2":{"name":"YET ANOTHER SAMPLE ITEM 2","stock":25}}}');
         }
         const jsonData = fs.readFileSync(dbFilePath, 'utf8');
         win.webContents.send('data-json', jsonData);
@@ -53,18 +70,13 @@ app.whenReady().then(() => {
 
     fs.access(prefFilePath, fs.constants.F_OK, (err) => {
         if (err) {
-            fs.writeFileSync(prefFilePath, '{"theme": "dark","lang": "en-US"}');
+            fs.writeFileSync(prefFilePath, '{"theme": "dark","lang": "en-US","appname": "OVS 2.0"}');
         }
         const prefData = fs.readFileSync(prefFilePath, 'utf8');
         win.webContents.send('config-json', prefData);
     });
 
-    win.webContents.on('did-finish-load', () => {
-        const btn = win.webContents.executeJavaScript('document.getElementById("updDataF1FinalConfirmBtn")');
-        btn.addEventListener('click', () => {
-            const miVariable = win.webContents.executeJavaScript('document.getElementById("stfu").value');
-        });
-    });
+    ipcMain.on('pushF1UpdData', handleF1UpdData)
 });
 
 app.on('window-all-closed', () => {
