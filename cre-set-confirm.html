@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'">-->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVS 2.0</title>
+    <link rel="icon" href="favovs.png" type="image/png">
+    <link href="modules/bootstrap.min.css" rel="stylesheet">
+    <script src="js/prefs.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand mb-0 h1" href="index.html" id="showappnameherebruh">OVS 2.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="config.html">Settings</a>
+                    </li>
+                    <form class="d-flex" role="search" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Confirm you want to perform the following action</h1>
+        <hr>
+        <div class="alert alert-light" role="alert" id="mainAlert">
+            <h4 class="alert-heading">Are you sure?</h4>
+            <p>This will create a SET with the name <b><u><span id="nsname">undefined</span></u></b>.</p>
+            <hr>
+            <p class="mb-0">You can CONFIRM if you want to create it, or CANCELL if you changed your mind.</p>
+        </div>
+
+        <div class="d-grid gap-2 d-md-block">
+            <button type="button" class="btn btn-success" id="updDataF2FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
+            <button type="button" class="btn btn-dark" id="nevermindbruhf2">
+                CANCELL
+            </button>
+        </div>
+
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams) {
+                const creSetId = urlParams.get('setid');
+                if (creSetId) {
+                    document.getElementById('nsname').innerHTML = creSetId;
+
+                    const jsonData = window.electron.requestDataJson();
+                    const data = JSON.parse(jsonData);
+
+                    function confirmChanges() {
+                        data[creSetId] = null;
+                        const njson = JSON.stringify(data, null, 2);
+                        if (njson) {
+                            console.log(njson);
+                            window.electronAPI.pushF1UpdData(njson);
+                            var a = document.createElement('a');
+                            a.href = "index.html";
+                            a.click();
+                        } else {
+                            console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO njson. Go check why.")
+                        }
+                    }
+                } else {
+                    console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO creSetId. Go check why.")
+                }
+            } else {
+                console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO urlParams. Go check why.")
+            }
+            document.getElementById('nevermindbruhf2').addEventListener('click', function() {
+                var a = document.createElement('a');
+                a.href = "index.html";
+                a.click();
+            });
+        </script>
+    </div>
+    <script src="modules/popper.min.js"></script>
+    <script src="modules/bootstrap.min.js"></script>
+    <script src="js/renderer.js"></script>
+</body>
+</html>

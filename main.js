@@ -124,9 +124,15 @@ ipcMain.on('request-config-json', (event) => {
     event.returnValue = prefData;
 });
 
-ipcMain.on('submit-form', (event, formData) => {
+ipcMain.on('pushF1formwdata', (event, formData) => {
     const params = new URLSearchParams(formData).toString();
     const redirectURL = `upd-data-confirm.html?${params}`;
+    shell.openExternal(redirectURL);
+});
+
+ipcMain.on('pushF2formwdata', (event, formData) => {
+    const params = new URLSearchParams(formData).toString();
+    const redirectURL = `cre-set-confirm.html?${params}`;
     shell.openExternal(redirectURL);
 });
 

@@ -24,8 +24,9 @@
                 if (themeSelect.options[i].value === themeValue) {
                     themeSelect.options[i].selected = true;
                     break;
-                }}
-            });
+                }
+            }
+        });
     </script>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
@@ -44,7 +45,7 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container mt-4" id="theSettingsContainerDiv">
         <h1>Settings</h1>
         <hr>
         <form id="prefsform">
@@ -54,6 +55,7 @@
                     <option value="light">Light</option>
                     <option selected value="dark">Dark</option>
                     <option value="darker">Darker</option>
+                    <option value="green">Green</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -71,6 +73,8 @@
             </div>
             <button type="submit" class="btn btn-primary" id="saveSetts">Save</button>
         </form>
+        <br>
+        <div id="settsalertgoeshere"></div>
     </div>
     <script src="js/prefsrenderer.js"></script>
     <script src="modules/popper.min.js"></script>

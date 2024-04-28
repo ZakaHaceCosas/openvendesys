@@ -42,7 +42,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updItStkMdl">Update item stock</a></li>
                         <hr>
-                        <li><a class="dropdown-item" href="#">Create set</a></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#creSetMdl">Create set</a></li>
                         <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
                         <hr>
                         <li><a class="dropdown-item" href="#">Delete set</a></li>
@@ -311,6 +311,72 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                    <script>
+                        (() => {
+                            'use strict';
+
+                            const forms = document.querySelectorAll('.needs-validation');
+
+                            Array.from(forms).forEach(form => {
+                                form.addEventListener('submit', event => {
+                                    let isValid = true;
+
+                                    form.querySelectorAll('select').forEach(select => {
+                                        if (select.value === '') {
+                                            isValid = false;
+                                            select.classList.add('is-invalid');
+                                        } else {
+                                            select.classList.remove('is-invalid');
+                                        }
+                                    });
+
+                                    form.querySelectorAll('input[type="number"]').forEach(input => {
+                                        if (input.value === '') {
+                                            isValid = false;
+                                            input.classList.add('is-invalid');
+                                        } else {
+                                            input.classList.remove('is-invalid');
+                                        }
+                                    });
+
+                                    if (!isValid) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+
+                                    form.classList.add('was-validated');
+                                }, false);
+                            });
+                        })();
+                    </script>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="creSetMdl" tabindex="-1" aria-labelledby="creSetMdlLbl" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="creSetMdlLbl">Create set</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="creSetMdlForm" method="get" novalidate action="cre-set-confirm.html">
+                        <div class="mb-3">
+                            <label for="creSetId" class="form-label">ID of your SET</label>
+                            <input type="text" pattern="^[A-Z0-9_]{3,50}$" class="form-control" id="creSetId" name="setid" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please provide a valid ID:<br>-Can only contain CAPITAL LETTERS, numbers, and underscores.<br>-Max of 50 characters and min of 3<br>-MUST be unique (not an ID you already used for other SET)
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
                         <script>
                             (() => {
                                 'use strict';
@@ -330,7 +396,7 @@
                                             }
                                         });
 
-                                        form.querySelectorAll('input[type="number"]').forEach(input => {
+                                        form.querySelectorAll('input').forEach(input => {
                                             if (input.value === '') {
                                                 isValid = false;
                                                 input.classList.add('is-invalid');
@@ -338,6 +404,29 @@
                                                 input.classList.remove('is-invalid');
                                             }
                                         });
+
+                                        const creIdInpt = document.getElementById('creSetId');
+
+                                        if (creIdInpt.value === '' || creIdInpt.value.length < 3 || creIdInpt.value.length > 50) {
+                                            isValid = false;
+                                            creIdInpt.classList.add('is-invalid');
+                                        } else {
+                                            let found = false;
+                                            const adat = JSON.parse(window.electron.requestDataJson());
+                                            for (const setName in adat) {
+                                                if (adat.hasOwnProperty(setName)) {
+                                                    if (creIdInpt.value === setName) {
+                                                        found = true;
+                                                        isValid = false;
+                                                        creIdInpt.classList.add('is-invalid');
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if (!found) {
+                                                creIdInpt.classList.remove('is-invalid');
+                                            }
+                                        }
 
                                         if (!isValid) {
                                             event.preventDefault();
