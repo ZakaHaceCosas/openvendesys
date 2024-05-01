@@ -37,47 +37,84 @@
         <hr>
         <div class="alert alert-light" role="alert" id="mainAlert">
             <h4 class="alert-heading">Are you sure?</h4>
-            <p>This will create a SET with the name <b><u><span id="nsname">undefined</span></u></b>.</p>
+            <p>This will create an ITEM with the name <b><u><span id="niname">undefined</span></u></b> (<code id="niid">undefined</code>), on parent SET <b><u><span id="psid">undefined</span></u></b> and starting stock <b><u><span id="ss">undefined</span></u></b>.</p>
             <hr>
-            <p class="mb-0">You can CONFIRM if you want to create it, or CANCELL if you changed your mind.</p>
+            <p class="mb-0">You can CONFIRM if you want to create it, or CANCEL if you changed your mind.</p>
         </div>
 
         <div class="d-grid gap-2 d-md-block">
-            <button type="button" class="btn btn-success" id="updDataF2FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
+            <button type="button" class="btn btn-success" id="updDataF3FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
             <button type="button" class="btn btn-dark" id="nevermindbruhf2">
-                CANCELL
+                CANCEL
             </button>
         </div>
 
         <script>
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams) {
-                const creSetId = urlParams.get('setid');
-                if (creSetId) {
-                    document.getElementById('nsname').innerHTML = creSetId;
+                console.log(urlParams)
+                const onWhatSet = urlParams.get('inputWhatSetForCreateItm');
+                if (onWhatSet) {
+                    const itemID = urlParams.get('itemid');
+                    const itemNAME = urlParams.get('itemname');
+                    const startstock = urlParams.get('startstock');
+                    if (itemID && itemNAME && startstock) {
+                        document.getElementById('niname').innerHTML = itemNAME;
+                        document.getElementById('niid').innerHTML = itemID;
+                        document.getElementById('psid').innerHTML = onWhatSet;
+                        document.getElementById('ss').innerHTML = startstock;
+                        const jsonData = window.electron.requestDataJson();
+                        const data = JSON.parse(jsonData);
 
-                    const jsonData = window.electron.requestDataJson();
-                    const data = JSON.parse(jsonData);
+                        function confirmChanges() {
+                            console.log(data);
+                            console.log(data[onWhatSet]);
 
-                    function confirmChanges() {
-                        data[creSetId] = null;
-                        const njson = JSON.stringify(data, null, 2);
-                        if (njson) {
-                            console.log(njson);
-                            window.electronAPI.pushF1UpdData(njson);
-                            var a = document.createElement('a');
-                            a.href = "index.html";
-                            a.click();
-                        } else {
-                            console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO njson. Go check why.")
-                        }
-                    }
-                } else {
-                    console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO creSetId. Go check why.")
-                }
-            } else {
-                console.error("ERR: cre-set-confirm.html, at SCRIPT TAG 1, NO urlParams. Go check why.")
-            }
+                            if (data[onWhatSet]) {
+                                const newItem = {
+                                    "name": itemNAME,
+                                    "stock": startstock
+                                };
+
+                                data[onWhatSet][itemID] = newItem;
+
+                                const njson = JSON.stringify(data, null, 2);
+
+                                if (njson) {
+                                    console.log(njson);
+                                    window.electronAPI.pushF1UpdData(njson);
+                                    var a = document.createElement('a');
+                                    a.href = "index.html";
+                                    a.click();
+                                } else {
+                                    console.error("ERR: cre-item-confirm.html, at SCRIPT TAG 1, NO njson. Go check why.")
+                                }
+                            } else if (!data[onWhatSet]) {
+                                data[onWhatSet] = {};
+
+                                const newItem = {
+                                    "name": itemNAME,
+                                    "stock": startstock
+                                };
+
+                                data[onWhatSet][itemID] = newItem;
+
+                                const njson = JSON.stringify(data, null, 2);
+
+                                if (njson) {
+                                    console.log(njson);
+                                    window.electronAPI.pushF1UpdData(njson);
+                                    var a = document.createElement('a');
+                                    a.href = "index.html";
+                                    a.click();
+                                } else {
+                                    console.error("ERR: cre-item-confirm.html, at SCRIPT TAG 1, NO njson. Go check why.")
+                                }
+                            } 
+                            else {
+                                console.error("ERR: cre-item-confirm.html, at SCRIPT TAG 1, el conjunto especificado no existe.");
+                            }
+                        }}}}
             document.getElementById('nevermindbruhf2').addEventListener('click', function() {
                 var a = document.createElement('a');
                 a.href = "index.html";

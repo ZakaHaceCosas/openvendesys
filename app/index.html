@@ -47,7 +47,7 @@
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updItStkMdl">Update item stock</a></li>
                         <hr>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#creSetMdl">Create set</a></li>
-                        <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#creItemMdl">&ThickSpace;&ThickSpace;Create item</a></li>
                         <hr>
                         <li><a class="dropdown-item" href="#">Delete set</a></li>
                         <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
@@ -146,7 +146,19 @@
                                     }
                                 }
                             }
+                            function buildF3I1HTMLfromJSON(data) {
+                                const select = document.getElementById('inputWhatSetForCreateItm');
 
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        const sel = document.getElementById('inputWhatSetForCreateItm');
+                                        const opt = document.createElement('option');
+                                        opt.innerHTML = setName;
+                                        opt.value = setName;
+                                        sel.appendChild(opt)
+                                    }
+                                }
+                            }
 
                             function buildHTMLFromJSON(data) {
                                 const ul = document.createElement('ul');
@@ -229,6 +241,7 @@
 
                                 jsonContainer.appendChild(buildHTMLFromJSON(data));
                                 buildF1I1HTMLfromJSON(data);
+                                buildF3I1HTMLfromJSON(data);
                                 sel2.addEventListener('change', () => {
                                     buildF1I2HTMLfromJSON(data);
                                 });
@@ -319,6 +332,53 @@
                             <input type="text" pattern="^[A-Z0-9_]{3,50}$" class="form-control" id="creSetId" name="setid" required>
                             <div class="form-text">
                                 For a valid SET ID:<br>-Can only contain CAPITAL LETTERS, numbers, and underscores.<br>-Max of 50 characters and min of 3<br>-MUST be unique (not an ID you already used for other SET)
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="creItemMdl" tabindex="-1" aria-labelledby="creItemMdlLbl" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="creItemMdlLbl">Create item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="creItmMdlForm" method="get" action="cre-set-confirm.html">
+                        <div class="mb-3">
+                            <select name="inputWhatSetForCreateItm" id="inputWhatSetForCreateItm" class="form-select" required>
+                                <option selected disabled value="">Choose a SET</option>
+                            </select>
+                            <div class="form-text">
+                                Choose the SET this item will be part of
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="creItmId" class="form-label">ID of your item</label>
+                            <input type="text" pattern="^[A-Z0-9_]{3,50}$" class="form-control" id="creItmId" name="itemid" required>
+                            <div class="form-text">
+                                For a valid item ID:<br>-Can only contain CAPITAL LETTERS, numbers, and underscores.<br>-Max of 50 characters and min of 3<br>-MUST be unique (not an ID you already used for other SET)
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="creItmName" class="form-label">Name of your item</label>
+                            <input type="text" pattern="[a-zA-Z0-9_ -]{3,50}$" class="form-control" id="creItmName" name="itemname" required>
+                            <div class="form-text">
+                                For a valid item name:<br>-Can only contain letter, numbers, spaces, lines (-) and underscores (_).<br>-Max of 50 characters and min of 3<br>-Doesn't need to be unique (however we recommend it to be)
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="creItmStartstock" class="form-label">Start stock</label>
+                            <input type="number" pattern="^[A-Z0-9_]{3,50}$" class="form-control" id="creItmStartstock" name="startstock" required>
+                            <div class="form-text">
+                                What stock should this item have the moment of creation
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Create</button>
