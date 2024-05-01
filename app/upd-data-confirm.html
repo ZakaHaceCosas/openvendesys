@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+<head>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP --
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'">-->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVS 2.0</title>
+    <link rel="icon" href="assets/favovs.png" type="image/png">
+    <link href="modules/bootstrap.min.css" rel="stylesheet">
+    <script src="js/prefs.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand mb-0 h1" href="index.html" id="showappnameherebruh">OVS 2.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="config.html">Settings</a>
+                    </li>
+                    <form class="d-flex" role="search" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Confirm you want to perform the following action</h1>
+        <hr>
+        <div class="alert alert-light" role="alert" id="mainAlert">
+            <h4 class="alert-heading">Are you sure?</h4>
+            <p>Check the changes to the <b><u><span id="iNAME">undefined</span></u></b> item (<i>from <b><u><span id="sNAME">undefined</span></u></b></i>).</p>
+            <hr>
+            <p class="mb-0">CONFIRM WILL UPDATE THE VALUE OF THE SPECIFIED ITEM TO <b><u><span id="result">undefined</span></u></b>.</p>
+            <p class="mb-0">CANCELL WILL MAKE THE VALUE OF THE SPECIFIED ITEM REMAIN UNCHANGED, AS <b><u><span id="prev">undefined</span></u></b>.</p>
+        </div>
+
+        <div class="d-grid gap-2 d-md-block">
+            <button type="button" class="btn btn-success" id="updDataF1FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
+            <button type="button" class="btn btn-dark" id="nevermindbruh">
+                CANCELL
+            </button>
+        </div>
+
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const inputWhatSetForUpdateEntryData = urlParams.get('inputWhatSetForUpdateEntryData');
+            const inputWhatEntryForSetForUpdateEntryData = urlParams.get('inputWhatEntryForSetForUpdateEntryData');
+            const whatToDoF1 = urlParams.get('whatToDoF1');
+            const amount = urlParams.get('amount');
+
+            document.getElementById('sNAME').innerHTML = inputWhatSetForUpdateEntryData;
+            document.getElementById('iNAME').innerHTML = inputWhatEntryForSetForUpdateEntryData;
+
+            const jsonData = window.electron.requestDataJson();
+            const data = JSON.parse(jsonData);
+
+            let startval;
+            let endval;
+
+            for (const setName in data) {
+                if (data.hasOwnProperty(setName)) {
+                    if (inputWhatSetForUpdateEntryData === setName) {
+                        for (const itemName in data[setName]) {
+                            if (data[setName].hasOwnProperty(itemName)) {
+                                if (inputWhatEntryForSetForUpdateEntryData === itemName) {
+                                    const stock = data[setName][itemName].stock;
+
+                                    if (data[setName][itemName].hasOwnProperty('stock')) {
+                                        if (whatToDoF1 === "remove") {
+                                            startval = Number(stock);
+                                            endval = Number(stock) - Number(amount);
+                                        } else if (whatToDoF1 === "add") {
+                                            startval = Number(stock);
+                                            endval = Number(stock) + Number(amount);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            document.getElementById('result').innerHTML = endval;
+            document.getElementById('prev').innerHTML = startval;
+
+            function confirmChanges() {
+                var json = data;
+                var wset = inputWhatSetForUpdateEntryData;
+                var witm = inputWhatEntryForSetForUpdateEntryData;
+                var opr = whatToDoF1;
+                var cnt = endval;
+
+                data[wset][witm].stock = endval;
+
+                var njson = JSON.stringify(data, null, 2);
+                console.log(njson);
+                window.electronAPI.pushF1UpdData(njson);
+
+                var a = document.createElement('a');
+                a.href = "index.html";
+                a.click();
+            }
+
+            document.getElementById('nevermindbruh').addEventListener('click', function() {
+                var a = document.createElement('a');
+                a.href = "index.html";
+                a.click();
+            });
+        </script>
+    </div>
+    <script src="modules/popper.min.js"></script>
+    <script src="modules/bootstrap.min.js"></script>
+    <script src="js/renderer.js"></script>
+</body>
+</html>

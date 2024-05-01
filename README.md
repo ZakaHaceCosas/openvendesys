@@ -1,4 +1,4 @@
-![OVS Banner](https://raw.githubusercontent.com/ZakaHaceCosas/openvendesys/main/banner.png)
+![OVS Banner](https://raw.githubusercontent.com/ZakaHaceCosas/openvendesys/main/library/banner.png)
 # OpenVendeSys 2.0
 ([Versión OVS 1.0, basada en PHP](https://github.com/ZakaHaceCosas/ovs-legacy))
 

@@ -15,14 +15,14 @@ const createWindow = () => {
         hasShadow: true,
         fullscreenable: false,
         transparent: false,
-        icon: path.join(__dirname, 'lib/favovs.png'),
+        icon: path.join(__dirname, 'app/assets/favovs.png'),
         webPreferences: {
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
         }
     });
 
-    win.loadFile('index.html');
+    win.loadFile('app/index.html');
 
     win.on('closed', () => {
         win = null;
@@ -63,7 +63,16 @@ function handleSetts (event, data) {
     UpdSetts(data)
 }
 
+function cargarTraducciones(idioma) {
+    const rutaArchivo = `translations/${idioma}.json`;
+    const contenidoArchivo = fs.readFileSync(rutaArchivo, 'utf-8');
+    return JSON.parse(contenidoArchivo);
+}
+
 app.whenReady().then(() => {
+    const lang = "es";
+    const traducciones = cargarTraducciones(lang);
+
     createWindow();
 
     app.on('activate', () => {

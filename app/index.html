@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OVS 2.0</title>
-    <link rel="icon" href="favovs.png" type="image/png">
+    <link rel="icon" href="assets/favovs.png" type="image/png">
     <link href="modules/bootstrap.min.css" rel="stylesheet">
     <script src="js/prefs.js"></script>
 </head>
@@ -21,7 +21,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="config.html">Settings</a>
+                        <a class="nav-link" href="config.html" id="settshref">Settings</a>
+                        <script>
+                            const settshref = document.getElementById('settshref');
+                            settshref.textContent = traducciones.ajustes;
+                        </script>
                     </li>
                     <form class="d-flex" role="search" method="GET">
                         <input class="form-control me-2" type="search" placeholder="Search" name="query" id="query" aria-label="Search" pattern="^\S.*$" oninvalid="this.setCustomValidity('Please make a valid search.')" oninput="setCustomValidity('')" autocomplete="off">
@@ -267,30 +271,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="needs-validation" id="updDataF1" action="upd-data-confirm.html" method="get" novalidate>
+                    <form class="needs-validation" id="updDataF1" action="upd-data-confirm.html" method="get">
                         <div class="mb-3">
                             <label for="inputWhatSetForUpdateEntryData" class="form-label">SET</label>
                             <select name="inputWhatSetForUpdateEntryData" id="inputWhatSetForUpdateEntryData" class="form-select" required>
                                 <option selected disabled value="">Choose a SET</option>
                             </select>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Choose a valid SET
-                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="inputWhatEntryForSetForUpdateEntryData" class="form-label">ITEM</label>
                             <select name="inputWhatEntryForSetForUpdateEntryData" id="inputWhatEntryForSetForUpdateEntryData" class="form-select" required>
                                 <option selected disabled value="">Choose an ITEM</option>
                             </select>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Choose a valid ITEM from your SET
-                            </div>
                         </div>
                         <div class="mb-3">
                             <div class="btn-group w-100">
@@ -303,53 +295,9 @@
                         <div class="mb-3">
                             <label for="inputAmount" class="form-label">Amount</label>
                             <input type="number" class="form-control" id="inputAmount" name="amount" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please provide a valid amount.
-                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
-                    <script>
-                        (() => {
-                            'use strict';
-
-                            const forms = document.querySelectorAll('.needs-validation');
-
-                            Array.from(forms).forEach(form => {
-                                form.addEventListener('submit', event => {
-                                    let isValid = true;
-
-                                    form.querySelectorAll('select').forEach(select => {
-                                        if (select.value === '') {
-                                            isValid = false;
-                                            select.classList.add('is-invalid');
-                                        } else {
-                                            select.classList.remove('is-invalid');
-                                        }
-                                    });
-
-                                    form.querySelectorAll('input[type="number"]').forEach(input => {
-                                        if (input.value === '') {
-                                            isValid = false;
-                                            input.classList.add('is-invalid');
-                                        } else {
-                                            input.classList.remove('is-invalid');
-                                        }
-                                    });
-
-                                    if (!isValid) {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                    }
-
-                                    form.classList.add('was-validated');
-                                }, false);
-                            });
-                        })();
-                    </script>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -365,79 +313,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="needs-validation" id="creSetMdlForm" method="get" novalidate action="cre-set-confirm.html">
+                    <form class="needs-validation" id="creSetMdlForm" method="get" action="cre-set-confirm.html">
                         <div class="mb-3">
                             <label for="creSetId" class="form-label">ID of your SET</label>
                             <input type="text" pattern="^[A-Z0-9_]{3,50}$" class="form-control" id="creSetId" name="setid" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Please provide a valid ID:<br>-Can only contain CAPITAL LETTERS, numbers, and underscores.<br>-Max of 50 characters and min of 3<br>-MUST be unique (not an ID you already used for other SET)
+                            <div class="form-text">
+                                For a valid SET ID:<br>-Can only contain CAPITAL LETTERS, numbers, and underscores.<br>-Max of 50 characters and min of 3<br>-MUST be unique (not an ID you already used for other SET)
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Create</button>
-                        <script>
-                            (() => {
-                                'use strict';
-
-                                const forms = document.querySelectorAll('.needs-validation');
-
-                                Array.from(forms).forEach(form => {
-                                    form.addEventListener('submit', event => {
-                                        let isValid = true;
-
-                                        form.querySelectorAll('select').forEach(select => {
-                                            if (select.value === '') {
-                                                isValid = false;
-                                                select.classList.add('is-invalid');
-                                            } else {
-                                                select.classList.remove('is-invalid');
-                                            }
-                                        });
-
-                                        form.querySelectorAll('input').forEach(input => {
-                                            if (input.value === '') {
-                                                isValid = false;
-                                                input.classList.add('is-invalid');
-                                            } else {
-                                                input.classList.remove('is-invalid');
-                                            }
-                                        });
-
-                                        const creIdInpt = document.getElementById('creSetId');
-
-                                        if (creIdInpt.value === '' || creIdInpt.value.length < 3 || creIdInpt.value.length > 50) {
-                                            isValid = false;
-                                            creIdInpt.classList.add('is-invalid');
-                                        } else {
-                                            let found = false;
-                                            const adat = JSON.parse(window.electron.requestDataJson());
-                                            for (const setName in adat) {
-                                                if (adat.hasOwnProperty(setName)) {
-                                                    if (creIdInpt.value === setName) {
-                                                        found = true;
-                                                        isValid = false;
-                                                        creIdInpt.classList.add('is-invalid');
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            if (!found) {
-                                                creIdInpt.classList.remove('is-invalid');
-                                            }
-                                        }
-
-                                        if (!isValid) {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                        }
-
-                                        form.classList.add('was-validated');
-                                    }, false);
-                                });
-                            })();
-                        </script>
                     </form>
                 </div>
                 <div class="modal-footer">

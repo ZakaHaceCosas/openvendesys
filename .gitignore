@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Archivos de construcción
+dist/
+build/
+out/
+
+# Archivos de caché y logs
+*.log
+npm-debug.log*
+
+# Dependencias específicas de npm
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.idea/
+.vscode/
+*.code-workspace
+
+# Cosas de ZakaHaceCosas / Stuff from ZakaDoesStuff
+gitn't/
