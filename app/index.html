@@ -124,7 +124,6 @@
                                     }
                                 }
                             }
-
                             function buildF1I2HTMLfromJSON(data) {
                                 const select = document.getElementById('inputWhatEntryForSetForUpdateEntryData');
                                 const othersel = document.getElementById('inputWhatSetForUpdateEntryData');
@@ -172,7 +171,40 @@
                                     }
                                 }
                             }
+                            function buildF5I1HTMLfromJSON(data) {
+                                const select = document.getElementById('whatSetForItmDel');
 
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        const sel = document.getElementById('whatSetForItmDel');
+                                        const opt = document.createElement('option');
+                                        opt.innerHTML = setName;
+                                        opt.value = setName;
+                                        sel.appendChild(opt)
+                                    }
+                                }
+                            }
+                            function buildF5I2HTMLfromJSON(data) {
+                                const select = document.getElementById('whatItmForDel');
+                                const othersel = document.getElementById('whatSetForItmDel');
+
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        if (othersel.value == setName) {
+                                            select.innerHTML = '<option selected disabled value="">Choose an ITEM</option>';
+                                            for (const itemName in data[setName]) {
+                                                if (data[setName].hasOwnProperty(itemName)) {
+                                                    const sel = document.getElementById('whatItmForDel');
+                                                    const opt = document.createElement('option');
+                                                    opt.innerHTML = itemName;
+                                                    opt.value = itemName;
+                                                    sel.appendChild(opt)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             function buildHTMLFromJSON(data) {
                                 const ul = document.createElement('ul');
                                 ul.id = 'mainStuffOl';
@@ -251,6 +283,7 @@
                                 const data = JSON.parse(jsonData);
                                 const jsonContainer = document.getElementById('json-container');
                                 const sel2 = document.getElementById('inputWhatSetForUpdateEntryData');
+                                const sel3 = document.getElementById('whatSetForItmDel');
 
                                 jsonContainer.appendChild(buildHTMLFromJSON(data));
                                 buildF1I1HTMLfromJSON(data);
@@ -258,6 +291,10 @@
                                 buildF4I1HTMLfromJSON(data);
                                 sel2.addEventListener('change', () => {
                                     buildF1I2HTMLfromJSON(data);
+                                });
+                                buildF5I1HTMLfromJSON(data);
+                                sel3.addEventListener('change', () => {
+                                    buildF5I2HTMLfromJSON(data);
                                 });
                             });
 
@@ -419,6 +456,40 @@
                             </select>
                             <div class="form-text">
                                 Choose the SET that will be removed
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Delete</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="delItmMdl" tabindex="-1" aria-labelledby="delItmMdlLbl" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delItmMdlLbl">Delete item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="delItmMdlForm" method="get" action="del-item-confirm.html">
+                        <div class="mb-3">
+                            <select name="whatSetForItmDel" id="whatSetForItmDel" class="form-select" required>
+                                <option selected disabled value="">Choose a SET</option>
+                            </select>
+                            <div class="form-text">
+                                Choose the SET where the item to be removed is
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <select name="whatItmForDel" id="whatItmForDel" class="form-select" required>
+                                <option selected disabled value="">Choose the item</option>
+                            </select>
+                            <div class="form-text">
+                                Choose the item to delete
                             </div>
                         </div>
                         <button type="submit" class="btn btn-warning">Delete</button>

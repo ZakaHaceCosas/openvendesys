@@ -19,6 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const form2 = document.getElementById('creSetMdlForm');
     const form3 = document.getElementById('creItmMdlForm');
     const form4 = document.getElementById('delSetMdlForm');
+    const form5 = document.getElementById('delItmMdlForm');
 
     if (form1) {
         form1.addEventListener('submit', event => {
@@ -130,5 +131,33 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         console.error("ERR: preload.js at UPD-DATA-F4, NO form. Go check why.");
+    }
+
+    if (form5) {
+        form5.addEventListener('submit', event => {
+            event.preventDefault();
+    
+            const formData = new FormData(form5);
+            if (formData) {
+                console.log(formData)
+                const params = new URLSearchParams(formData).toString();
+                if (params) {
+                    console.log(params);
+                    const redirectURL = `del-item-confirm.html?${params}`;
+                    if (redirectURL) {
+                        console.log(redirectURL)
+                        window.location.href = redirectURL;
+                    } else {
+                        console.error("ERR: preload.js at UPD-DATA-F5, NO redirectURL. Go check why.");
+                    }
+                } else {
+                    console.error("ERR: preload.js at UPD-DATA-F5, NO params. Go check why.");
+                }
+            } else {
+                console.error("ERR: preload.js at UPD-DATA-F5, NO formData. Go check why.");
+            }
+        });
+    } else {
+        console.error("ERR: preload.js at UPD-DATA-F5, NO form. Go check why.");
     }
 });
