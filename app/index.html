@@ -49,8 +49,8 @@
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#creSetMdl">Create set</a></li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#creItemMdl">&ThickSpace;&ThickSpace;Create item</a></li>
                         <hr>
-                        <li><a class="dropdown-item" href="#">Delete set</a></li>
-                        <li><a class="dropdown-item" href="#">&ThickSpace;&ThickSpace;Create item</a></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delSetMdl">Delete set</a></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delItmMdl">&ThickSpace;&ThickSpace;Delete item</a></li>
                     </ul>
                 </div>
                 <hr>
@@ -159,6 +159,19 @@
                                     }
                                 }
                             }
+                            function buildF4I1HTMLfromJSON(data) {
+                                const select = document.getElementById('whatSetForDel');
+
+                                for (const setName in data) {
+                                    if (data.hasOwnProperty(setName)) {
+                                        const sel = document.getElementById('whatSetForDel');
+                                        const opt = document.createElement('option');
+                                        opt.innerHTML = setName;
+                                        opt.value = setName;
+                                        sel.appendChild(opt)
+                                    }
+                                }
+                            }
 
                             function buildHTMLFromJSON(data) {
                                 const ul = document.createElement('ul');
@@ -242,6 +255,7 @@
                                 jsonContainer.appendChild(buildHTMLFromJSON(data));
                                 buildF1I1HTMLfromJSON(data);
                                 buildF3I1HTMLfromJSON(data);
+                                buildF4I1HTMLfromJSON(data);
                                 sel2.addEventListener('change', () => {
                                     buildF1I2HTMLfromJSON(data);
                                 });
@@ -382,6 +396,32 @@
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="delSetMdl" tabindex="-1" aria-labelledby="delSetMdlLbl" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delSetMdlLbl">Delete SET</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="delSetMdlForm" method="get" action="del-set-confirm.html">
+                        <div class="mb-3">
+                            <select name="whatSetForDel" id="whatSetForDel" class="form-select" required>
+                                <option selected disabled value="">Choose a SET</option>
+                            </select>
+                            <div class="form-text">
+                                Choose the SET that will be removed
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Delete</button>
                     </form>
                 </div>
                 <div class="modal-footer">
