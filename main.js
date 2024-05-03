@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, ipcRenderer, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, ipcRenderer, shell, autoUpdater } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -29,7 +29,8 @@ const createWindow = () => {
     });
 };
 
-app.setUserTasks([])
+app.setUserTasks([]);
+app.setAppUserModelId("com.zakahacecosas.openvendesys2");
 
 function F1UpdData(data) {
     const dbFilePath = path.join(app.getPath('userData'), 'data.json');
@@ -62,6 +63,19 @@ function handleSetts (event, data) {
     const webContents = event.sender
     UpdSetts(data)
 }
+
+autoUpdater.setFeedURL({
+    url: 'https://github.com/ZakaHaceCosas/openvendesys/releases/latest',
+    provider: 'github'
+});
+
+setInterval(() => {
+    autoUpdater.checkForUpdates();
+}, 2500000);
+
+autoUpdater.on('update-downloaded', () => {
+    autoUpdater.quitAndInstall();
+})
 
 app.whenReady().then(() => {
     createWindow();
