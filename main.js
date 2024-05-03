@@ -1,6 +1,8 @@
-const { app, BrowserWindow, ipcMain, ipcRenderer, shell, autoUpdater } = require('electron');
+const { app, BrowserWindow, ipcMain, ipcRenderer, shell, autoUpdater, dialog } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+const { version } = require('./package.json');
 
 let win;
 
@@ -64,21 +66,6 @@ function handleSetts (event, data) {
     UpdSetts(data)
 }
 
-autoUpdater.setFeedURL({
-    url: 'https://github.com/ZakaHaceCosas/openvendesys/releases/latest',
-    provider: 'github'
-});
-
-autoUpdater.checkForUpdates();
-
-setInterval(() => {
-    autoUpdater.checkForUpdates();
-}, 250000);
-
-autoUpdater.on('update-downloaded', () => {
-    autoUpdater.quitAndInstall();
-})
-
 app.whenReady().then(() => {
     createWindow();
 
@@ -113,8 +100,39 @@ app.whenReady().then(() => {
     });
 
     ipcMain.on('pushF1UpdData', handleF1UpdData);
-    ipcMain.on('pushSetts', handleSetts)
+    ipcMain.on('pushSetts', handleSetts);
+    update();
 });
+
+async function update() {
+    try {
+        const response = await axios.get('https://api.github.com/repos/ZakaHaceCosas/openvendesys/releases');
+        const releases = response.data;
+        const ultimaRelease = releases[0];
+        console.log('LAST VER:', ultimaRelease.name);
+        if (ultimaRelease.tag_name !== version) {
+            const { response: choice } = await dialog.showMessageBox(win, {
+                type: 'info',
+                buttons: ['Actualizar', 'Cancelar'],
+                defaultId: 0,
+                message: `Hay una nueva version disponible: ${ultimaRelease.name}`,
+                detail: '¿Deseas actualizar ahora?'
+            });
+        if (choice === 0) {
+            const asset = ultimaRelease.assets.find(asset => asset.name.endsWith('.zip'));
+            if (asset) {
+                require('electron').shell.openExternal(asset.browser_download_url);
+            } else {
+                console.error('No se encontro un archivo para descargar en la ultima release.');
+            }
+        }
+    } else {
+        console.log('La version actual esta actualizada.');
+    }
+    } catch (error) {
+      console.error('Error al obtener la ultima version:', error.message);
+    }
+}
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
