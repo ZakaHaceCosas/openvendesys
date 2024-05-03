@@ -69,9 +69,11 @@ autoUpdater.setFeedURL({
     provider: 'github'
 });
 
+autoUpdater.checkForUpdates();
+
 setInterval(() => {
     autoUpdater.checkForUpdates();
-}, 2500000);
+}, 250000);
 
 autoUpdater.on('update-downloaded', () => {
     autoUpdater.quitAndInstall();
