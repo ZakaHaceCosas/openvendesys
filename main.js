@@ -63,16 +63,7 @@ function handleSetts (event, data) {
     UpdSetts(data)
 }
 
-function cargarTraducciones(idioma) {
-    const rutaArchivo = `translations/${idioma}.json`;
-    const contenidoArchivo = fs.readFileSync(rutaArchivo, 'utf-8');
-    return JSON.parse(contenidoArchivo);
-}
-
 app.whenReady().then(() => {
-    const lang = "es";
-    const traducciones = cargarTraducciones(lang);
-
     createWindow();
 
     app.on('activate', () => {

@@ -1,5 +1,8 @@
 <!-- VERSIONING: EACH COMMIT / PR ADDS 1 TO THE DEV, UNTIL THE PROGRAM GETS TO A POINT WHERE IT'S ACTUALLY USABLE. FROM THERE, PATCHES & FIXES WILL INCREASE 0.0.X, AND FEATURE-PACKED UPDATES WILL INCREASE 0.X.0.-->
 ## OVS 2
+# 2.0.0 (DEV-06)
+- Adjustments (trying to make the app compile)
+
 # 2.0.0 (DEV-05)
 - Now you can delete items aswell
 - At this point, the app is more or less usable.
