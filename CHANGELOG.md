@@ -1,5 +1,8 @@
 <!-- VERSIONING: EACH COMMIT / PR ADDS 1 TO THE DEV, UNTIL THE PROGRAM GETS TO A POINT WHERE IT'S ACTUALLY USABLE. FROM THERE, PATCHES & FIXES WILL INCREASE 0.0.X, AND FEATURE-PACKED UPDATES WILL INCREASE 0.X.0.-->
 ## OVS 2
+# 2.0.2
+- Fixed an error that made the program think it has to update when it doesnt have to
+
 # 2.0.1
 - Fixed an error where creating an item broke the Totals
 
