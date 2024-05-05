@@ -6,9 +6,6 @@ dist/
 build/
 out/
 
-# Output
-OVS 2.0-win32-x64/
-
 # Archivos de caché y logs
 *.log
 npm-debug.log*

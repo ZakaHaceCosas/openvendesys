@@ -1,5 +1,5 @@
 ![OVS Banner](https://raw.githubusercontent.com/ZakaHaceCosas/openvendesys/main/library/banner.png)
-# OpenVendeSys 2.0
+# OpenVendeSys 2
 ([Versión OVS 1.0, basada en PHP](https://github.com/ZakaHaceCosas/ovs-legacy))
 
 ## ¿Qué es esto y para qué sirve?
