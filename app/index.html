@@ -210,51 +210,55 @@
 
                                 let totalGlobal = 0;
 
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        const setLi = document.createElement('li');
-                                        setLi.className = 'list-group-item d-flex justify-content-between align-items-start';
-                                        const div = document.createElement('div');
-                                        div.className = 'ms-2 me-auto';
-                                        const h4 = document.createElement('h4');
-                                        h4.textContent = setName;
-                                        const itemUl = document.createElement('ul');
-                                        itemUl.className = 'list-group list-group-flush';
+                                if (Object.keys(data).length === 0 && data.constructor === Object) {
+                                        ul.innerHTML = "<h1>No items!</h1>";
+                                    } else {
+                                    for (const setName in data) {
+                                        if (data.hasOwnProperty(setName)) {
+                                            const setLi = document.createElement('li');
+                                            setLi.className = 'list-group-item d-flex justify-content-between align-items-start';
+                                            const div = document.createElement('div');
+                                            div.className = 'ms-2 me-auto';
+                                            const h4 = document.createElement('h4');
+                                            h4.textContent = setName;
+                                            const itemUl = document.createElement('ul');
+                                            itemUl.className = 'list-group list-group-flush';
 
-                                        let totalSet = 0;
+                                            let totalSet = 0;
 
-                                        for (const itemName in data[setName]) {
-                                            if (data[setName].hasOwnProperty(itemName)) {
-                                                const itemLi = document.createElement('li');
-                                                itemLi.className = 'list-group-item';
-                                                itemLi.textContent = `${data[setName][itemName].name} - STOCK: ${data[setName][itemName].stock}`;
-                                                totalSet += data[setName][itemName].stock;
-                                                itemUl.appendChild(itemLi);
+                                            for (const itemName in data[setName]) {
+                                                if (data[setName].hasOwnProperty(itemName)) {
+                                                    const itemLi = document.createElement('li');
+                                                    itemLi.className = 'list-group-item';
+                                                    itemLi.textContent = `${data[setName][itemName].name} - STOCK: ${data[setName][itemName].stock}`;
+                                                    totalSet += data[setName][itemName].stock;
+                                                    itemUl.appendChild(itemLi);
+                                                }
                                             }
+
+                                            div.appendChild(h4);
+                                            div.appendChild(itemUl);
+                                            setLi.appendChild(div);
+
+                                            const p = document.createElement('p');
+                                            p.textContent = `TOTAL: ${totalSet}`;
+                                            if (totalSet < 20 && totalSet > 1) {
+                                                p.className = 'badge text-bg-warning';
+                                                alertEndUser("med", setName, "low")
+                                            }
+                                            else if (totalSet < 1) {
+                                                p.className = 'badge text-bg-danger';
+                                                alertEndUser("high", setName, "broke")
+                                            }
+                                            else {
+                                                p.className = 'badge text-bg-success';
+                                            };
+                                            setLi.appendChild(p);
+
+                                            totalGlobal += totalSet;
+
+                                            ul.appendChild(setLi);
                                         }
-
-                                        div.appendChild(h4);
-                                        div.appendChild(itemUl);
-                                        setLi.appendChild(div);
-
-                                        const p = document.createElement('p');
-                                        p.textContent = `TOTAL: ${totalSet}`;
-                                        if (totalSet < 20 && totalSet > 1) {
-                                            p.className = 'badge text-bg-warning';
-                                            alertEndUser("med", setName, "low")
-                                        }
-                                        else if (totalSet < 1) {
-                                            p.className = 'badge text-bg-danger';
-                                            alertEndUser("high", setName, "broke")
-                                        }
-                                        else {
-                                            p.className = 'badge text-bg-success';
-                                        };
-                                        setLi.appendChild(p);
-
-                                        totalGlobal += totalSet;
-
-                                        ul.appendChild(setLi);
                                     }
                                 }
 
@@ -456,7 +460,7 @@
                                 Choose the SET that will be removed
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-warning">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
                 <div class="modal-footer">

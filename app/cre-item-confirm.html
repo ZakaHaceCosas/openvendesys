@@ -35,7 +35,7 @@
     <div class="container mt-4">
         <h1>Confirm you want to perform the following action</h1>
         <hr>
-        <div class="alert alert-light" role="alert" id="mainAlert">
+        <div class="alert alert-primary" role="alert" id="mainAlert">
             <h4 class="alert-heading">Are you sure?</h4>
             <p>This will create an ITEM with the name <b><u><span id="niname">undefined</span></u></b> (<code id="niid">undefined</code>), on parent SET <b><u><span id="psid">undefined</span></u></b> and starting stock <b><u><span id="ss">undefined</span></u></b>.</p>
             <hr>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="d-grid gap-2 d-md-block">
-            <button type="button" class="btn btn-success" id="updDataF3FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
+            <button type="button" class="btn btn-primary" id="updDataF3FinalConfirmBtn" onclick="confirmChanges()">CONFIRM</button>
             <button type="button" class="btn btn-dark" id="nevermindbruhf2">
                 CANCEL
             </button>
@@ -94,7 +94,7 @@
 
                                 const newItem = {
                                     "name": itemNAME,
-                                    "stock": startstock
+                                    "stock": Number(startstock)
                                 };
 
                                 data[onWhatSet][itemID] = newItem;

@@ -1,5 +1,12 @@
 <!-- VERSIONING: EACH COMMIT / PR ADDS 1 TO THE DEV, UNTIL THE PROGRAM GETS TO A POINT WHERE IT'S ACTUALLY USABLE. FROM THERE, PATCHES & FIXES WILL INCREASE 0.0.X, AND FEATURE-PACKED UPDATES WILL INCREASE 0.X.0.-->
 ## OVS 2
+# 2.0.3
+- Fixed in-app version displaying
+- Fixed an error where if you create a 1st item on a SET, the sum of the total would not be done properly due to the JSON storing the number as a "string".
+- Replaced "starter data" with an empty JSON so the user has less problems to get started.
+- Added "No items!" thingy.
+- Improvements to styling.
+
 # 2.0.2
 - Fixed an error that made the program think it has to update when it doesnt have to
 

@@ -13,6 +13,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.send('get-versions');
+    ipcRenderer.on('versions', (event, versions) => {
+        console.log(versions);
+        document.getElementById('node-v').innerHTML = "NodeJS <b>" + versions.nodever + "</b>";
+        document.getElementById('ovs2-v').innerHTML = "OVS <b>" + versions.ovs2ver + "</b>";
+        document.getElementById('chrm-v').innerHTML = "Chromium <b>" + versions.chrmver + "</b>";
+        document.getElementById('elec-v').innerHTML = "ElectronJS <b>" + versions.elecver + "</b>";
+        document.getElementById('open-v').innerHTML = "OpenSSL <b>" + versions.openver + "</b>";
+    });
     console.log("DOMContentLoaded event fired successfully");
 
     const form1 = document.getElementById('updDataF1');

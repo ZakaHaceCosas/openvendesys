@@ -80,7 +80,7 @@ app.whenReady().then(() => {
 
     fs.access(dbFilePath, fs.constants.F_OK, (err) => {
         if (err) {
-            fs.writeFileSync(dbFilePath, '{"SAMPLE_SET_1":{"SAMPLE_I_1":{"name":"SAMPLE ITEM 1","stock":25},"SAMPLE_I_2":{"name":"SAMPLE ITEM 2","stock":153}},"LOW_SAMPLE_SET":{"LOW_STOCK_S":{"name":"LOW STOCK SAMPLE ITEM","stock":4},"NO_STOCK_S":{"name":"NO STOCK SAMPLE ITEM","stock":0}},"SAMPLE_SET_3":{"YET_ANOTHER_S_1":{"name":"YET ANOTHER SAMPLE ITEM 1","stock":25},"YET_ANOTHER_S_2":{"name":"YET ANOTHER SAMPLE ITEM 2","stock":25}}}');
+            fs.writeFileSync(dbFilePath, '{}');
         }
         const jsonData = fs.readFileSync(dbFilePath, 'utf8');
         win.webContents.send('data-json', jsonData);
@@ -104,11 +104,14 @@ app.whenReady().then(() => {
     update();
 });
 
+let appver;
+
 async function update() {
     try {
         const response = await axios.get('https://api.github.com/repos/ZakaHaceCosas/openvendesys/releases');
         const releases = response.data;
         const ultimaRelease = releases[0];
+        appver = ultimaRelease.name;
         console.log('LAST VER:', ultimaRelease.name);
         if (ultimaRelease.tag_name !== version) {
             const { response: choice } = await dialog.showMessageBox(win, {
@@ -133,6 +136,16 @@ async function update() {
       console.error('Error al obtener la ultima version:', error.message);
     }
 }
+
+ipcMain.on('get-versions', (event) => {
+    const nodever = process.versions.node;
+    const chrmver = process.versions.chrome;
+    const openver = process.versions.openssl;
+    const elecver = process.versions.electron;
+    const ovs2ver = appver;
+
+    event.reply('versions', { nodever, chrmver, ovs2ver, elecver, openver });
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

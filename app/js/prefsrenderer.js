@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 console.log(settsJson);
                                 window.electronAPI.pushSetts(settsJson)
                                 const al = document.createElement("div");
-                                al.className = "alert alert-info";
+                                al.className = "alert alert-primary";
                                 al.role = "alert";
                                 al.innerHTML = "<b>Done!</b> Your changes will apply as soon as you leave this menu.";
                                 const pal = document.getElementById("settsalertgoeshere");
