@@ -49,20 +49,17 @@
                     </ul>
                 </div>
                 <hr>
-                <!--
+                <!---
                 <div class="card">
                     <div class="card-header">
                         Navigation
                     </div>
                     <div class="card-body">
-                        <div class="d-flex flex-column mb-3">
-                            <button class="btn btn-primary">
+                        <div class="d-flex flex-column mb-3" id="navsidebar">
+                            <button class="btn btn-primary" id="navseeallbtn">
                                 See all
                             </button>
                             <hr>
-                            <button class="btn btn-primary">
-                                SET 1
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -79,127 +76,62 @@
                         </ul>
                         <script>
                             function alertEndUser(level, set, whatfor) {
-                                let levelclass;
+                                const levelClassMap = {
+                                    "med": "warning",
+                                    "high": "danger",
+                                    "good": "success",
+                                    "info": "info"
+                                };
+                                const levelclass = levelClassMap[level] || "info";
+
                                 let alertInnerHtml;
-                                const generatedAlert = document.createElement("div");
-                                const bodo = document.getElementById("bodo");
-
-                                bodo.appendChild(generatedAlert);
-
-                                if (level === "med") {
-                                    levelclass = "warning";
-                                } else if (level === "high") {
-                                    levelclass = "danger";
-                                } else if (level === "good") {
-                                    levelclass = "success";
-                                } else {
-                                    levelclass = "info";
-                                }
-
                                 if (whatfor === "low") {
                                     alertInnerHtml = `Running low on ${set}'s stock.`;
                                 } else if (whatfor === "broke") {
                                     alertInnerHtml = `You ran out of ${set}'s stock!`;
                                 }
 
+                                const generatedAlert = document.createElement("div");
                                 generatedAlert.className = `alert alert-${levelclass}`;
                                 generatedAlert.innerHTML = alertInnerHtml;
+
+                                const bodo = document.getElementById("bodo");
+                                bodo.appendChild(generatedAlert);
                             }
 
-                            function buildF1I1HTMLfromJSON(data) {
-                                const select = document.getElementById('inputWhatSetForUpdateEntryData');
+                            function buildOptionsFromJSON(data, selectId) {
+                                const select = document.getElementById(selectId);
+                                select.innerHTML = '<option selected disabled value="">Choose an option</option>';
 
                                 for (const setName in data) {
                                     if (data.hasOwnProperty(setName)) {
-                                        const sel = document.getElementById('inputWhatSetForUpdateEntryData');
                                         const opt = document.createElement('option');
-                                        opt.innerHTML = setName;
+                                        opt.textContent = setName;
                                         opt.value = setName;
-                                        sel.appendChild(opt)
+                                        select.appendChild(opt);
                                     }
                                 }
                             }
-                            function buildF1I2HTMLfromJSON(data) {
-                                const select = document.getElementById('inputWhatEntryForSetForUpdateEntryData');
-                                const othersel = document.getElementById('inputWhatSetForUpdateEntryData');
 
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        if (othersel.value == setName) {
-                                            select.innerHTML = '<option selected disabled value="">Choose an ITEM</option>';
-                                            for (const itemName in data[setName]) {
-                                                if (data[setName].hasOwnProperty(itemName)) {
-                                                    const sel = document.getElementById('inputWhatEntryForSetForUpdateEntryData');
-                                                    const opt = document.createElement('option');
-                                                    opt.innerHTML = itemName;
-                                                    opt.value = itemName;
-                                                    sel.appendChild(opt)
-                                                }
-                                            }
+                            function buildItemsFromJSON(data, selectId, setSelectId) {
+                                const select = document.getElementById(selectId);
+                                const setSelect = document.getElementById(setSelectId);
+                                const setName = setSelect.value;
+
+                                select.innerHTML = '<option selected disabled value="">Choose an ITEM</option>';
+
+                                if (data.hasOwnProperty(setName)) {
+                                    for (const itemName in data[setName]) {
+                                        if (data[setName].hasOwnProperty(itemName)) {
+                                            const opt = document.createElement('option');
+                                            opt.textContent = itemName;
+                                            opt.value = itemName;
+                                            select.appendChild(opt);
                                         }
                                     }
                                 }
                             }
-                            function buildF3I1HTMLfromJSON(data) {
-                                const select = document.getElementById('inputWhatSetForCreateItm');
 
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        const sel = document.getElementById('inputWhatSetForCreateItm');
-                                        const opt = document.createElement('option');
-                                        opt.innerHTML = setName;
-                                        opt.value = setName;
-                                        sel.appendChild(opt)
-                                    }
-                                }
-                            }
-                            function buildF4I1HTMLfromJSON(data) {
-                                const select = document.getElementById('whatSetForDel');
-
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        const sel = document.getElementById('whatSetForDel');
-                                        const opt = document.createElement('option');
-                                        opt.innerHTML = setName;
-                                        opt.value = setName;
-                                        sel.appendChild(opt)
-                                    }
-                                }
-                            }
-                            function buildF5I1HTMLfromJSON(data) {
-                                const select = document.getElementById('whatSetForItmDel');
-
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        const sel = document.getElementById('whatSetForItmDel');
-                                        const opt = document.createElement('option');
-                                        opt.innerHTML = setName;
-                                        opt.value = setName;
-                                        sel.appendChild(opt)
-                                    }
-                                }
-                            }
-                            function buildF5I2HTMLfromJSON(data) {
-                                const select = document.getElementById('whatItmForDel');
-                                const othersel = document.getElementById('whatSetForItmDel');
-
-                                for (const setName in data) {
-                                    if (data.hasOwnProperty(setName)) {
-                                        if (othersel.value == setName) {
-                                            select.innerHTML = '<option selected disabled value="">Choose an ITEM</option>';
-                                            for (const itemName in data[setName]) {
-                                                if (data[setName].hasOwnProperty(itemName)) {
-                                                    const sel = document.getElementById('whatItmForDel');
-                                                    const opt = document.createElement('option');
-                                                    opt.innerHTML = itemName;
-                                                    opt.value = itemName;
-                                                    sel.appendChild(opt)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                             function buildHTMLFromJSON(data) {
                                 const ul = document.createElement('ul');
                                 ul.id = 'mainStuffOl';
@@ -208,8 +140,8 @@
                                 let totalGlobal = 0;
 
                                 if (Object.keys(data).length === 0 && data.constructor === Object) {
-                                        ul.innerHTML = "<h1>No items!</h1>";
-                                    } else {
+                                    ul.innerHTML = "<h1>No items!</h1>";
+                                } else {
                                     for (const setName in data) {
                                         if (data.hasOwnProperty(setName)) {
                                             const setLi = document.createElement('li');
@@ -220,7 +152,15 @@
                                             h4.textContent = setName;
                                             const itemUl = document.createElement('ul');
                                             itemUl.className = 'list-group list-group-flush';
-
+                                            /*
+                                            const filter = document.createElement('button');
+                                            filter.className = "btn btn-primary";
+                                            filter.id = "FILTER_" + setName;
+                                            filter.innerHTML = setName
+                                            const filterparent = document.getElementById('navsidebar');
+                                            filterparent.appendChild(filter);
+                                            filterparent.appendChild(document.createElement('br'))
+                                            */
                                             let totalSet = 0;
 
                                             for (const itemName in data[setName]) {
@@ -239,17 +179,15 @@
 
                                             const p = document.createElement('p');
                                             p.textContent = `TOTAL: ${totalSet}`;
+                                            p.className = totalSet < 1 ? 'badge text-bg-danger' : (totalSet < 20 ? 'badge text-bg-warning' : 'badge text-bg-success');
+
                                             if (totalSet < 20 && totalSet > 1) {
-                                                p.className = 'badge text-bg-warning';
                                                 alertEndUser("med", setName, "low")
                                             }
                                             else if (totalSet < 1) {
-                                                p.className = 'badge text-bg-danger';
                                                 alertEndUser("high", setName, "broke")
                                             }
-                                            else {
-                                                p.className = 'badge text-bg-success';
-                                            };
+
                                             setLi.appendChild(p);
 
                                             totalGlobal += totalSet;
@@ -261,17 +199,7 @@
 
                                 const totalGlobalLbl = document.createElement('li');
                                 totalGlobalLbl.className = 'list-group-item h6';
-                                let totalGlobalSpanClassname;
-                                if (totalGlobal < 20 && totalGlobal > 1) {
-                                    totalGlobalSpanClassname = '--bs-warning-text-emphasis';
-                                }
-                                else if (totalGlobal < 1) {
-                                    totalGlobalSpanClassname = '--bs-danger-text-emphasis';
-                                }
-                                else {
-                                    totalGlobalSpanClassname = '--bs-success-text-emphasis';
-                                };
-                                totalGlobalLbl.innerHTML = `TOTAL GLOBAL: <span style="color: var(${totalGlobalSpanClassname})">${totalGlobal}</span>`;
+                                totalGlobalLbl.innerHTML = `TOTAL GLOBAL: <span style="color: var(--bs-${totalGlobal < 1 ? 'danger' : (totalGlobal < 20 ? 'warning' : 'success')}-text-emphasis)">${totalGlobal}</span>`;
                                 document.getElementById('displayTotal').appendChild(totalGlobalLbl);
 
                                 return ul;
@@ -280,20 +208,24 @@
                             window.addEventListener('DOMContentLoaded', () => {
                                 const jsonData = window.electron.requestDataJson();
                                 const data = JSON.parse(jsonData);
+
                                 const jsonContainer = document.getElementById('json-container');
+                                jsonContainer.appendChild(buildHTMLFromJSON(data));
+
+                                buildOptionsFromJSON(data, 'inputWhatSetForUpdateEntryData');
+                                buildOptionsFromJSON(data, 'inputWhatSetForCreateItm');
+                                buildOptionsFromJSON(data, 'whatSetForDel');
+                                buildOptionsFromJSON(data, 'whatSetForItmDel');
+
                                 const sel2 = document.getElementById('inputWhatSetForUpdateEntryData');
                                 const sel3 = document.getElementById('whatSetForItmDel');
 
-                                jsonContainer.appendChild(buildHTMLFromJSON(data));
-                                buildF1I1HTMLfromJSON(data);
-                                buildF3I1HTMLfromJSON(data);
-                                buildF4I1HTMLfromJSON(data);
                                 sel2.addEventListener('change', () => {
-                                    buildF1I2HTMLfromJSON(data);
+                                    buildItemsFromJSON(data, 'inputWhatEntryForSetForUpdateEntryData', 'inputWhatSetForUpdateEntryData');
                                 });
-                                buildF5I1HTMLfromJSON(data);
+
                                 sel3.addEventListener('change', () => {
-                                    buildF5I2HTMLfromJSON(data);
+                                    buildItemsFromJSON(data, 'whatItmForDel', 'whatSetForItmDel');
                                 });
                             });
 
@@ -303,6 +235,7 @@
 
                                 window.electron.updateJson(key, value);
                             }
+
                         </script>
                         <div id="json-container"></div>
                     </div>
