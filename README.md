@@ -1,3 +1,6 @@
+> [!WARNING]
+> Archivo público, el nuevo repositorio para OVS 3 es [este](https://github.com/ZakaHaceCosas/ovs)
+
 ![OVS Banner](https://raw.githubusercontent.com/ZakaHaceCosas/openvendesys/main/library/banner.png)
 # OpenVendeSys 2
 
