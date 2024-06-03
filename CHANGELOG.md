@@ -1,5 +1,8 @@
 <!-- VERSIONING: EACH COMMIT / PR ADDS 1 TO THE DEV, UNTIL THE PROGRAM GETS TO A POINT WHERE IT'S ACTUALLY USABLE. FROM THERE, PATCHES & FIXES WILL INCREASE 0.0.X, AND FEATURE-PACKED UPDATES WILL INCREASE 0.X.0.-->
 ## OVS 2
+# 03/06/2024
+- Made the repo a public archive - will create OVS 3 soon.
+
 # 2.1.1
 - Made another general (and harder) effort to make the code more readable.
 
